@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Link Length Checker</title>
+</head>
+
+<body>
+  <h1>Link Length Checker</h1>
+
+  <textarea readonly cols="40" rows="10" id="original-link"></textarea>
+
+  <p id="length"></p>
+
+  <script>
+    window.addEventListener("DOMContentLoaded", () => {
+      const link = window.location.href;
+      document.querySelector("#original-link").textContent = link;
+      document.querySelector("#length").textContent = `Length: ${link.length}`;
+    });
+  </script>
+</body>
+
+</html>
