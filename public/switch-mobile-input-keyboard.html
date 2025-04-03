@@ -13,15 +13,28 @@
   <p><u>On mobile</u> type 4 numbers into the input</p>
 
   <input type="number">
+  <p class="type">type=number</p>
 
   <script>
+    function resetFocusAndSelection(element) {
+      element.blur();
+      element.focus();
+      element.selectionStart = element.value.length;
+      element.selectionEnd = element.value.length;
+    }
+
     window.addEventListener("DOMContentLoaded", () => {
       document.querySelector("input").addEventListener("input", (event) => {
         const input = event.target;
-        if (input.value.length >= 4) {
+        const type = input.getAttribute("type");
+        if (input.value.length >= 4 && type !== "text") {
+          document.querySelector(".type").textContent = "type=text";
           input.setAttribute("type", "text");
-        } else {
+          resetFocusAndSelection(input);
+        } else if (input.value.length < 4 && type !== "number") {
+          document.querySelector(".type").textContent = "type=number";
           input.setAttribute("type", "number");
+          resetFocusAndSelection(input);
         }
       });
     });
