@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Switch Mobile Input Keyboard</title>
+</head>
+
+<body>
+  <h1>Switch Mobile Input Keyboard</h1>
+
+  <p><u>On mobile</u> type 4 numbers into the input</p>
+
+  <input type="number">
+
+  <script>
+    window.addEventListener("DOMContentLoaded", () => {
+      document.querySelector("input").addEventListener("input", (event) => {
+        const input = event.target;
+        if (input.value.length >= 4) {
+          input.setAttribute("type", "text");
+        } else {
+          input.setAttribute("type", "number");
+        }
+      });
+    });
+  </script>
+</body>
+
+</html>
