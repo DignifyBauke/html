@@ -23,7 +23,7 @@
       input.focus();
 
       // Setting the selection to the end is needed since otherwise the focus
-      // will put it at the start of the input.
+      // reset will put it at the start of the input.
       try {
         input.selectionStart = input.value.length;
         input.selectionEnd = input.value.length;
