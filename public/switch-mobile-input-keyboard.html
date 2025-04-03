@@ -16,25 +16,44 @@
   <p class="type">type=number</p>
 
   <script>
-    function resetFocusAndSelection(element) {
-      element.blur();
-      element.focus();
-      element.selectionStart = element.value.length;
-      element.selectionEnd = element.value.length;
+    function resetFocusAndSelection(input) {
+      // Resetting the focus is needed so the current (keypad or text) keyboard
+      // is removed and the other keyboard is shown instead.
+      input.blur();
+      input.focus();
+
+      // Setting the selection to the end is needed since otherwise the focus
+      // will put it at the start of the input.
+      try {
+        input.selectionStart = input.value.length;
+        input.selectionEnd = input.value.length;
+      } catch {
+        // On Chromium-based browsers setting the selection is not possible on
+        // a type=number input element, here however the selection reset is not
+        // necessary so just catch this error and do nothing.
+        // The selection reset is still necessary for other browsers.
+      }
     }
 
     window.addEventListener("DOMContentLoaded", () => {
       document.querySelector("input").addEventListener("input", (event) => {
         const input = event.target;
         const type = input.getAttribute("type");
-        if (input.value.length >= 4 && type !== "text") {
-          document.querySelector(".type").textContent = "type=text";
+
+        if (input.value.length >= 4 && type === "number") {
+          // Only switch to the text keyboard if the current one is the keypad
+          // keyboard and more than 4 characters have been entered.
           input.setAttribute("type", "text");
           resetFocusAndSelection(input);
-        } else if (input.value.length < 4 && type !== "number") {
-          document.querySelector(".type").textContent = "type=number";
+
+          document.querySelector(".type").textContent = "type=text"; // For debugging
+        } else if (input.value.length < 4 && type === "text") {
+          // Only switch to the keypad keyboard if the current one is the text
+          // keyboard and we are back to less than 4 characters entered.
           input.setAttribute("type", "number");
           resetFocusAndSelection(input);
+
+          document.querySelector(".type").textContent = "type=number"; // For debugging
         }
       });
     });
