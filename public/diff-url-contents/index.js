@@ -16,6 +16,14 @@ function handleUrlInput(event) {
 }
 
 async function getTextFromUrl(url) {
+  if (url === undefined || url === "") {
+    return "";
+  }
+
+  if (!isValidUrl(url)) {
+    return `Error: Invalid URL ${url}`;
+  }
+
   const response = await window.fetch(`https://corsproxy.io/?url=${encodeURI(url)}`);
   const text = await response.text();
   return text;
