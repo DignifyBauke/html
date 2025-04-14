@@ -1,0 +1,47 @@
+.container {
+  margin: 0 auto;
+  max-width: 1400px;
+}
+
+header {
+  padding: 10px;
+}
+
+main {
+  --columns: 2;
+
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(var(--columns), 1fr);
+  padding: 10px;
+}
+
+label {
+  display: block;
+}
+
+input {
+  width: 100%;
+}
+
+textarea {
+  min-height: 200px;
+  width: 100%;
+}
+
+.span-columns {
+  grid-column: span var(--columns);
+}
+
+button {
+  padding: 10px;
+  width: 100%;
+}
+
+#diff-root {
+  border: 1px solid grey;
+  font-family: monospace;
+  margin: 0;
+  word-wrap: break-word;
+  white-space: pre-wrap;
+}

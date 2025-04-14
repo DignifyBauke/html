@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diff URL Contents</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/modern-normalize/3.0.1/modern-normalize.min.css" integrity="sha512-q6WgHqiHlKyOqslT/lgBgodhd03Wp4BEqKeW6nNtlOY4quzyG3VoQKFrieaCeSnuVseNKRGpGeDU3qPmabCANg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="./index.css">
+</head>
+
+<body>
+  <header class="container">
+    <h1>Diff URL Contents</h1>
+  </header>
+
+  <main class="container">
+    <div>
+      <label for="url-a">URL A</label>
+      <input type="url" id="url-a">
+    </div>
+
+    <div>
+      <label for="url-b">URL B</label>
+      <input type="url" id="url-b">
+    </div>
+
+    <div class="span-columns">
+      <button id="load-urls">Load URLs</button>
+    </div>
+
+    <div>
+      <label for="text-a">Text A</label>
+      <textarea id="text-a"></textarea>
+    </div>
+
+    <div>
+      <label for="text-b">Text B</label>
+      <textarea id="text-b"></textarea>
+    </div>
+
+    <div class="span-columns">
+      <button id="diff-texts">Diff Texts</button>
+    </div>
+
+    <div class="span-columns">
+      <pre id="diff-root"></pre>
+    </div>
+  </main>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jsdiff/7.0.0/diff.min.js" integrity="sha512-immo//J6lKoR+nRIFDPxoxfL2nd/0N3w8l4LwH4HSSVovtUjab5kbh4AhixLH5z9mIv37llY9Q2i8AfEDXyYjw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="./index.js"></script>
+</body>
+
+</html>
