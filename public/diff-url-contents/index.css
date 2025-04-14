@@ -25,6 +25,7 @@ input {
 }
 
 textarea {
+  font-family: monospace;
   min-height: 200px;
   width: 100%;
 }
