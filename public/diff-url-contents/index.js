@@ -55,13 +55,14 @@ function renderDiff(a, b) {
   const diffRoot = document.querySelector("#diff-root");
   diffRoot.innerHTML = ""; // Remove any existing child elements.
 
-  const diff = Diff.diffChars(a, b);
+  const diff = Diff.diffChars(a.trim(), b.trim());
 
   for (const part of diff) {
     const span = document.createElement("span");
     span.style.backgroundColor = part.added ? "#00ff0044" : part.removed ? "#ff000044" : "transparent";
     span.style.color = part.added ? "#008800" : part.removed ? "#880000" : "black";
     span.style.textDecoration = part.added || part.removed ? "underline" : "none";
+    span.dataset.diffStatus = part.added ? "added" : part.removed ? "removed" : "unchanged";
     span.textContent = part.value;
     diffRoot.insertAdjacentElement("beforeend", span);
   }
@@ -73,6 +74,45 @@ function isValidUrl(url) {
     return true;
   } catch {
     return false;
+  }
+}
+
+function handleScrollToNext(event) {
+  let currentPosition = window.scrollY;
+  const existing = document.querySelector(`[data-diff-scrolled="true"]`) ?? undefined;
+  if (existing !== undefined) {
+    currentPosition = Math.round(existing.getBoundingClientRect().top + document.documentElement.scrollTop);
+  }
+
+  const diffStatus = event.target.id === "scroll-to-next-added" ? "added" : "removed";
+  const diffParts = Array.from(document.querySelectorAll(`[data-diff-status="${diffStatus}"]`));
+
+  let scrolledPart = undefined;
+  for (const part of diffParts) {
+    if (part.dataset.diffScrolled === "true") {
+      part.dataset.diffScrolled = false;
+      continue;
+    }
+
+    if (Math.round(part.getBoundingClientRect().top + document.documentElement.scrollTop) > currentPosition) {
+      scrolledPart = part;
+      part.dataset.diffScrolled = true;
+      part.scrollIntoView({behavior: "smooth"});
+      break;
+    }
+  }
+
+  for (const part of Array.from(document.querySelectorAll(`[data-diff-scrolled="true"]`))) {
+    if (part === scrolledPart) {
+      continue;
+    }
+
+    part.dataset.diffScrolled = false;
+  }
+
+  if (scrolledPart === undefined && diffParts[0] !== undefined) {
+    diffParts[0].dataset.diffScrolled = true;
+    diffParts[0].scrollIntoView({behavior: "smooth"});
   }
 }
 
@@ -102,4 +142,7 @@ window.addEventListener("DOMContentLoaded", () => {
   if (isValidUrl(urlA.value) && isValidUrl(urlB.value)) {
     loadUrls(undefined, true);
   }
+
+  document.querySelector("#scroll-to-next-removed").addEventListener("click", handleScrollToNext);
+  document.querySelector("#scroll-to-next-added").addEventListener("click", handleScrollToNext);
 });

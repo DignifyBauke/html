@@ -45,3 +45,32 @@ button {
   word-wrap: break-word;
   white-space: pre-wrap;
 }
+
+#floating-controls {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  gap: 10px;
+  position: fixed;
+  bottom: 10px;
+  right: 10px;
+  width: 250px;
+}
+
+#scroll-to-next-removed {
+  background-color: #ff000044;
+  border: 1px solid #880000;
+  color: #880000;
+  cursor: pointer;
+}
+
+#scroll-to-next-added {
+  background-color: #00ff0044;
+  border: 1px solid #008800;
+  color: #008800;
+  cursor: pointer;
+}
+
+[data-diff-scrolled="true"] {
+  border: 2px dashed #000000;
+  padding: 2px;
+}
