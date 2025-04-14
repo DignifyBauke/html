@@ -55,7 +55,7 @@ function renderDiff(a, b) {
   const diffRoot = document.querySelector("#diff-root");
   diffRoot.innerHTML = ""; // Remove any existing child elements.
 
-  const diff = Diff.diffChars(a.trim(), b.trim());
+  const diff = Diff.diffWords(a.trim(), b.trim());
 
   for (const part of diff) {
     const span = document.createElement("span");
@@ -94,7 +94,7 @@ function handleScrollToNext(event) {
       continue;
     }
 
-    if (Math.round(part.getBoundingClientRect().top + document.documentElement.scrollTop) > currentPosition) {
+    if (Math.round(part.getBoundingClientRect().top + document.documentElement.scrollTop) > currentPosition + 5) {
       scrolledPart = part;
       part.dataset.diffScrolled = true;
       part.scrollIntoView({behavior: "smooth"});
