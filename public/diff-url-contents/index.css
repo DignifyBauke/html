@@ -73,5 +73,6 @@ button {
 
 [data-diff-scrolled="true"] {
   border: 2px dashed #000000;
+  line-height: 1.75rem;
   padding: 2px;
 }
