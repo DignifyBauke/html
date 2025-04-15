@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Escape Special Characters</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/modern-normalize/3.0.1/modern-normalize.min.css" integrity="sha512-q6WgHqiHlKyOqslT/lgBgodhd03Wp4BEqKeW6nNtlOY4quzyG3VoQKFrieaCeSnuVseNKRGpGeDU3qPmabCANg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <style>
+    .container {
+      --columns: 2;
+
+      margin: 0 auto;
+      width: 1200px;
+      display: grid;
+      gap: 10px;
+      grid-template-columns: repeat(var(--columns, 2), 1fr);
+    }
+
+    .container .grid-span {
+      grid-column: span var(--columns, 2);
+    }
+
+    summary {
+      cursor: pointer;
+    }
+
+    #replacements-list {
+      list-style-type: none;
+      padding-left: 0px;
+    }
+
+    .replacements-list-item {
+      font-size: 1.5rem;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <p id="input-preview"></p>
+    <p id="output-preview"></p>
+    <textarea id="input" rows="15"></textarea>
+    <textarea id="output" rows="15" readonly></textarea>
+    <details>
+      <summary>Current list with replacements</summary>
+
+      <ul id="replacements-list"></ul>
+      <!-- <a href="https://mateam.net/html-escape-characters/">Full list of escape characters</a> -->
+    </details>
+  </div>
+
+  <script>
+    const replacements = [
+      ["€", "&#128;"],
+      ["…", "&#133;"],
+      ["á", "&aacute;"],
+      ["Á", "&Aacute;"],
+      ["à", "&agrave;"],
+      ["À", "&Agrave;"],
+      ["â", "&acirc;"],
+      ["Â", "&Acirc;"],
+      ["é", "&eacute;"],
+      ["É", "&Eacute;"],
+      ["è", "&egrave;"],
+      ["È", "&Egrave;"],
+      ["ê", "&ecirc;"],
+      ["Ê", "&Ecirc;"],
+      ["î", "&icirc;"],
+      ["Î", "&Icirc;"],
+      ["ö", "&ouml;"],
+      ["Ö", "&Ouml;"],
+      ["ä", "&auml;"],
+      ["Ä", "&Auml;"],
+      ["ü", "&uuml;"],
+      ["Ü", "&Uuml;"],
+    ];
+
+    function handleInput() {
+      const text = document.querySelector("#input").value;
+
+      let escaped = text;
+      for (const [find, replace] of replacements) {
+        const regex = new RegExp(find, "g")
+        escaped = escaped.replace(regex, replace);
+      }
+
+      document.querySelector("#input-preview").innerHTML = text;
+      document.querySelector("#output").value = escaped;
+      document.querySelector("#output-preview").innerHTML = escaped;
+    }
+
+    window.addEventListener("DOMContentLoaded", () => {
+      const input = document.querySelector("#input");
+      const output = document.querySelector("#output");
+      input.addEventListener("input", handleInput);
+      handleInput();
+
+      const replacementsList = document.querySelector("#replacements-list");
+      for (const [find, replace] of replacements) {
+        replacementsList.insertAdjacentHTML(
+          "beforeend",
+          `<li class="replacements-list-item"><code class="list-find">${find}</code> → <code class="list-replace">${replace.replace("&", "&amp;")}</code></li>`
+        );
+      }
+    });
+  </script>
+</body>
+
+</html>
