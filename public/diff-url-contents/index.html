@@ -39,9 +39,14 @@
       <textarea id="text-b"></textarea>
     </div>
 
-    <div class="span-columns">
-      <button id="diff-texts">Diff Texts</button>
-    </div>
+    <select id="diff-function">
+      <option value="0" disabled selected>Diff Function</option>
+      <option value="chars">Chars</option>
+      <option value="words">Words</option>
+      <option value="lines">Lines</option>
+    </select>
+
+    <button id="diff-texts">Diff Texts</button>
 
     <div class="span-columns">
       <pre id="diff-root"></pre>

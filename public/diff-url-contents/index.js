@@ -15,6 +15,12 @@ function handleUrlInput(event) {
   window.location.hash = queryParams.toString();
 }
 
+function handleDiffFunctionSelect(event) {
+  const queryParams = new URLSearchParams(window.decodeURI(window.location.hash.slice(1)));
+  queryParams.set("diff-function", window.encodeURI(event.target.value));
+  window.location.hash = queryParams.toString();
+}
+
 async function getTextFromUrl(url) {
   if (url === undefined || url === "") {
     return "";
@@ -55,7 +61,19 @@ function renderDiff(a, b) {
   const diffRoot = document.querySelector("#diff-root");
   diffRoot.innerHTML = ""; // Remove any existing child elements.
 
-  const diff = Diff.diffChars(a.trim(), b.trim());
+  const selectedDiffFunction = document.querySelector("#diff-function").value;
+  let diffFunction = Diff.diffChars;
+  if (selectedDiffFunction === "chars") {
+    diffFunction = Diff.diffChars;
+  } else if (selectedDiffFunction === "words") {
+    diffFunction = Diff.diffWords;
+  } else if (selectedDiffFunction === "lines") {
+    diffFunction = Diff.diffLines;
+  } else {
+    diffFunction = Diff.diffChars;
+  }
+
+  const diff = diffFunction(a.trim(), b.trim());
 
   for (const part of diff) {
     const span = document.createElement("span");
@@ -120,6 +138,16 @@ window.addEventListener("DOMContentLoaded", () => {
   console.log("Diff URL Contents");
 
   const queryParams = new URLSearchParams(window.location.hash.slice(1));
+
+  document.querySelector("#diff-function").addEventListener("change", handleDiffFunctionSelect);
+  if (queryParams.has("diff-function")) {
+    for (option of Array.from(document.querySelectorAll("#diff-function > option"))) {
+      option.removeAttribute("selected");
+      if (option.value === queryParams.get("diff-function")) {
+        option.setAttribute("selected", "true");
+      }
+    }
+  }
 
   const urlA = document.querySelector("#url-a");
   urlA.addEventListener("input", handleUrlInput);
