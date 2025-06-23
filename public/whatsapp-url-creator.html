@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WhatsApp URL Creator</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/modern-normalize/3.0.1/modern-normalize.min.css" integrity="sha512-q6WgHqiHlKyOqslT/lgBgodhd03Wp4BEqKeW6nNtlOY4quzyG3VoQKFrieaCeSnuVseNKRGpGeDU3qPmabCANg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+
+<body>
+  <h1>WhatsApp URL Creator</h1>
+
+  <textarea cols="40" rows="10" id="text"></textarea>
+
+  <textarea readonly cols="40" rows="10" id="link"></textarea>
+
+  <script>
+    function handleTextInput(event) {
+      const text = event.target.value;
+
+      const linkTextarea = document.querySelector("#link");
+      const url = new URL(`https://api.whatsapp.com/send/?type=custom_url&app_absent=0&text=${window.encodeURIComponent(text)}`);
+      linkTextarea.value = url;
+    }
+
+    window.addEventListener("DOMContentLoaded", () => {
+      document.querySelector("#text").addEventListener("input", handleTextInput);
+    });
+  </script>
+</body>
+
+</html>
