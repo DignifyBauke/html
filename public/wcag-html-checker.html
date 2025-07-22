@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WCAG HTML Checker</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/modern-normalize/3.0.1/modern-normalize.min.css" integrity="sha512-q6WgHqiHlKyOqslT/lgBgodhd03Wp4BEqKeW6nNtlOY4quzyG3VoQKFrieaCeSnuVseNKRGpGeDU3qPmabCANg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+
+<body>
+  <!-- <h1>WCAG HTML Checker</h1> -->
+
+  <textarea cols="40" rows="10" id="html"></textarea>
+
+  <script>
+    function handleTextInput(event) {
+        const html = event.target.value;
+        const root = setupHtml(html);
+        for (const rule of rules) {
+            console.log(rule.name);
+            console.log(rule.check(root));
+            console.log();
+        }
+    }
+
+    function setupHtml(html) {
+        const existingRoot = document.querySelector("#root") ?? undefined;
+        if (existingRoot !== undefined) {
+            existingRoot.remove();
+        }
+
+        const parser = new DOMParser();
+        const root = parser.parseFromString(html, "text/html");
+        console.log(root);
+        return root;
+    }
+
+    const rules = [
+        {
+            name: "line-height is 1.5x font-size in pixels",
+            check: (root) => {
+                const good = [];
+                const alerts = [];
+                const bad = [];
+
+                for (const element of Array.from(root.querySelectorAll("[style]"))) {
+                    const fontSize = element.style.fontSize.toLowerCase();
+                    const lineHeight = element.style.lineHeight.toLowerCase();
+
+                    // If font-size isn't defined, skip checking
+                    if (fontSize === "") {
+                        continue;
+                    }
+
+                    // If line-height isn't specified, mark it as invalid
+                    if (lineHeight === "") {
+                        bad.push({element, reason: "element has a font-size but not a line-height"});
+                        continue;
+                    }
+
+                    // Check that font-size is specified in pixels
+                    if (!fontSize.endsWith("px")) {
+                        bad.push({element, reason: "font-size is not specified in pixels"});
+                        continue;
+                    }
+
+                    // Check that line-height is specified in pixels
+                    if (!lineHeight.endsWith("px")) {
+                        bad.push({element, reason: "line-height is not specified in pixels"});
+                        continue;
+                    }
+
+                    // If font-size is 0px and line-height is 1px then we know this is a spacer
+                    // element for centering the wrapping <td> element
+                    if (fontSize === "0px" && lineHeight === "1px") {
+                        good.push({element, reason: "known spacer element"})
+                        continue;
+                    }
+
+                    // Convert the font-size and line-heights to numbers so we can math them
+                    const fontSizeNumber = Number(fontSize.slice(0, fontSize.length - 2));
+                    const lineHeightNumber = Number(lineHeight.slice(0, lineHeight.length - 2));
+
+                    // Check that the line-height is 1.5x the font-size
+                    if (fontSizeNumber * 1.5 !== lineHeightNumber) {
+                        bad.push({element, reason: "line-height is not 1.5x the font-size"});
+                        continue;
+                    }
+
+                    // Check for "mso-line-height-rule:exactly;"
+                    if (!/mso-line-height-rule:\s*exactly/g.test(element.getAttribute("style"))) {
+                        alerts.push({element, reason: "element is missing mso-line-height-rule:exactly;"});
+                        continue;
+                    }
+
+                    good.push({element, reason: "element is good"});
+                }
+
+                return {good, alerts, bad};
+            },
+        },
+    ];
+
+    window.addEventListener("DOMContentLoaded", () => {
+      document.querySelector("#html").addEventListener("input", handleTextInput);
+    });
+  </script>
+</body>
+
+</html>
